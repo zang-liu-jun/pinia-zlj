@@ -94,9 +94,43 @@ describe("Store", () => {
     })
     expect(store.nested.foo).toBe('bar')
   })
+
   test('如果没有state,可以创造一个空state', () => {
     const store = defineStore({ id: 'some' })()
-
     expect(store.$state).toEqual({})
   })
+
+  test('can hydrate the state', () => {
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    const useStore = defineStore({
+      id: 'main',
+      state: () => ({
+        a: true,
+        nested: {
+          foo: 'foo',
+          a: { b: 'string' },
+        },
+      }),
+    })
+
+    const store = useStore()
+    pinia.state.value.main = {
+      a: false,
+      nested: {
+        foo: 'bar',
+        a: { b: 'string 2' },
+      },
+    }
+
+    expect(store.$state).toEqual({
+      a: false,
+      nested: {
+        foo: 'bar',
+        a: { b: 'string 2' },
+      },
+    })
+  })
+
+
 })

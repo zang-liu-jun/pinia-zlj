@@ -250,11 +250,17 @@ export function defineStore(
     _ActionsTree
   > {
     const currentInstance = getCurrentInstance()
-    let pinia = currentInstance && inject(piniaSymbol) as Pinia
-    if (pinia) {
-      setActivePinia(pinia)
+    let pinia: Pinia
+    if (activePinia) {
+      pinia = activePinia
+    } else {
+      if (currentInstance === null) {
+        throw new Error("🍎未在组件中使用并且没有设置activePinia")
+      }
+      pinia = currentInstance && inject(piniaSymbol) as Pinia
     }
-    pinia = activePinia
+    setActivePinia(pinia)
+
     if (!pinia._s.has(id)) {
       if (typeof setup === "function") {
         createSetupStore(id, setup, options, pinia, false)
