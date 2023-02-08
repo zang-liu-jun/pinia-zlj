@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeEach } from "vitest";
+import { describe, expect, test, beforeEach, vi } from "vitest";
 import { createPinia, defineStore, setActivePinia } from "../index";
 import { } from "vue"
 import { mount } from "@vue/test-utils"
@@ -66,14 +66,32 @@ describe("Store", () => {
     }
     const w1 = mount(TestComponent, { global: { plugins: [pinia] } })
     const w2 = mount(TestComponent, { global: { plugins: [pinia] } })
-    
+
     expect(w1.text()).toBe('0')
     expect(w2.text()).toBe('0')
 
     w1.vm.store!.n++
-    // 等待dom更新完成
     await w1.vm.$nextTick()
     expect(w1.text()).toBe('1')
     expect(w2.text()).toBe('1')
+  })
+
+  test("可以被reset", () => {
+    const store = useStore()!
+    const spy = vi.fn()
+    store.$subscribe(spy, { flush: "sync" })
+    expect(spy).not.toHaveBeenCalled()
+    store.$reset()
+    expect(spy).toHaveBeenCalledTimes(1)
+    store.$state!.nested.foo="bar"
+    expect(spy).toHaveBeenCalledTimes(2)
+    expect(store.$state).toEqual({
+      a: true,
+      nested: {
+        foo: 'bar',
+        a: { b: 'string' },
+      },
+    })
+    expect(store.nested.foo).toBe('bar')
   })
 })

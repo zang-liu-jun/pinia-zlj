@@ -1,7 +1,7 @@
 import { App, Ref, UnwrapRef } from "vue"
 
 export type Pinia = {
-  _s: Map<string | symbol, Store<string, StateTree, any, any>>
+  _s: Map<string | symbol, Store<string, StateTree, any, _ActionsTree>>
   _p: Function[]
   state: Ref<Record<string, any>>
   install: (app: App) => void
@@ -10,7 +10,7 @@ export type Pinia = {
       (() => any) |
       ((context: {
         pinia: Pinia,
-        store: Store<string, StateTree, Record<string, Function>, _ActionsTree>
+        store: Store<string, StateTree, _GettersTree<StateTree>, _ActionsTree>
       }) => any)
   ) => Pinia
 
@@ -23,17 +23,11 @@ export type _GettersTree<S extends StateTree> = Record<
   | (() => any)
 >
 export type _ActionsTree = Record<string, (...args: any[]) => any>
-export type _Method = (...args: any) => any
-export type _StoreWithGetters<G> = {
-  readonly [k in keyof G]: G[k] extends (...args: any[]) => infer R
-  ? R
-  : UnwrapRef<G[k]>
-}
 
 export type Store<
   Id extends string,
   S extends StateTree,
-  G extends Record<string, Function>,
+  G extends _GettersTree<S>,
   A extends _ActionsTree
 > = S & G & A & BaseStore<Id, S>
 

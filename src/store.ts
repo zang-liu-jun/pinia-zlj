@@ -25,7 +25,6 @@ import type {
   Pinia,
   StateTree,
   Store,
-  _Method,
   BaseStore,
   _ActionsTree,
   _GettersTree
@@ -75,7 +74,7 @@ export function createSetupStore<
   Id extends string,
   SS extends StateTree,
   S extends StateTree,
-  G extends Record<string, _Method>,
+  G extends _GettersTree<S>,
   A extends _ActionsTree
 >(
   $id: Id,
@@ -203,14 +202,16 @@ export function createSetupStore<
 export function defineStore<
   Id extends string,
   S extends StateTree,
-  G extends Record<string, Function>,
+  G extends _GettersTree<S>,
   A extends _ActionsTree
->(options: DefineStoreOptions<Id, S, G, A>): () => Store<Id, S, G, A> | null
+>(
+  options: DefineStoreOptions<Id, S, G, A>
+): (() => Store<Id, S, G, A>)
 
 export function defineStore<
   Id extends string,
   S extends StateTree,
-  G extends Record<string, Function>,
+  G extends _GettersTree<S>,
   A extends _ActionsTree
 >(
   id: Id,
@@ -226,7 +227,8 @@ export function defineStore<
 export function defineStore(
   idOrOptions: any,
   setup?: any
-): () => Store<string, StateTree, any, any> {
+): (() => Store<string, StateTree, _GettersTree<StateTree>,
+  _ActionsTree>) {
   let id: string
   let options: DefineStoreOptions<
     string,
@@ -241,7 +243,12 @@ export function defineStore(
     id = idOrOptions.id
     options = idOrOptions
   }
-  function useStore(): Store<string, StateTree, any, any> {
+  function useStore(): Store<
+    string,
+    StateTree,
+    _GettersTree<StateTree>,
+    _ActionsTree
+  > {
     const currentInstance = getCurrentInstance()
     let pinia = currentInstance && inject(piniaSymbol) as Pinia
     if (pinia) {
