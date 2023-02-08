@@ -83,7 +83,7 @@ describe("Store", () => {
     expect(spy).not.toHaveBeenCalled()
     store.$reset()
     expect(spy).toHaveBeenCalledTimes(1)
-    store.$state!.nested.foo="bar"
+    store.$state!.nested.foo = "bar"
     expect(spy).toHaveBeenCalledTimes(2)
     expect(store.$state).toEqual({
       a: true,
@@ -93,5 +93,10 @@ describe("Store", () => {
       },
     })
     expect(store.nested.foo).toBe('bar')
+  })
+  test('如果没有state,可以创造一个空state', () => {
+    const store = defineStore({ id: 'some' })()
+
+    expect(store.$state).toEqual({})
   })
 })
