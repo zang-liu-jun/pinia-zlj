@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, vi } from "vitest";
 import { createPinia, defineStore, setActivePinia } from "../index";
-import { } from "vue"
+import { defineComponent,nextTick} from "vue"
 import { mount } from "@vue/test-utils"
 
 describe("Store", () => {
@@ -100,7 +100,7 @@ describe("Store", () => {
     expect(store.$state).toEqual({})
   })
 
-  test('can hydrate the state', () => {
+  test('直接修改pinia的state', () => {
     const pinia = createPinia()
     setActivePinia(pinia)
     const useStore = defineStore({
@@ -132,5 +132,39 @@ describe("Store", () => {
     })
   })
 
+  test('可以在两个不同的组件中使用一个pinia', async () => {
+    const useStore = defineStore({ id: 'one', state: () => ({ n: 0 }) })
+    const pinia = createPinia()
 
+    const Comp = defineComponent({
+      setup() {
+        const store = useStore()
+        return { store }
+      },
+      template: `{{ store.n }}`,
+    })
+
+    const One = mount(Comp, {
+      global: {
+        plugins: [pinia],
+      },
+    })
+
+    const Two = mount(Comp, {
+      global: {
+        plugins: [pinia],
+      },
+    })
+
+    const store = useStore()
+
+    expect(One.text()).toBe('0')
+    expect(Two.text()).toBe('0')
+
+    store.n++
+    await nextTick()
+
+    expect(One.text()).toBe('1')
+    expect(Two.text()).toBe('1')
+  })
 })
