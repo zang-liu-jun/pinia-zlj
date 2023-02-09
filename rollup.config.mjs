@@ -1,5 +1,4 @@
 import path from "path"
-import serve from "rollup-plugin-serve"
 import { terser } from "rollup-plugin-minification"
 import ts from "rollup-plugin-typescript2"
 import dts from 'rollup-plugin-dts';
