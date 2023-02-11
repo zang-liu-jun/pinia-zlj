@@ -1,6 +1,6 @@
 {
   "name": "pinia-zlj",
-  "version": "1.0.0",
+  "version": "1.0.21",
   "description": "",
   "main": "./dist/bundle.cjs",
   "module": "./dist/bundle.mjs",
