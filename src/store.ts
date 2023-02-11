@@ -50,8 +50,6 @@ export function createOptionsStore<
 
   function setup() {
     pinia.state.value[id] = state ? state() : {}
-    // BUG:?
-    // const localState = { ...pinia.state.value[id] }
     const localState = toRefs(pinia.state.value[id])
     return Object.assign(
       localState,
