@@ -22,11 +22,15 @@ export class EventEmitter<T extends string> {
     if (!this.events[type]) {
       this.events[type] = []
     }
-    this.events[type].push(callback)
+      this.events[type].push(callback)
   }
   trigger(type: T, ...args: any) {
     if (this.events[type]) {
       this.events[type].forEach(fn => fn(...args))
     }
+  }
+  off(type:T){
+    if(!this.events[type]) return;
+    this.events[type]=[]
   }
 }

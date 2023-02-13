@@ -17,7 +17,7 @@ export default [{
     ts(),	// 转化ts
     terser() //压缩代码
   ]
-},{
+}, {
   input: "./src/index.ts",
   output: {
     format: "cjs",

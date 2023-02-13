@@ -54,6 +54,7 @@ declare class EventEmitter<T extends string> {
     constructor();
     add(type: T, callback: Function): void;
     trigger(type: T, ...args: any): void;
+    off(type: T): void;
 }
 
 declare function persistentPlugin({ pinia, store }: {

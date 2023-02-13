@@ -126,35 +126,20 @@ export function createSetupStore<
   }
 
   function wrapAction(action: (...args: any) => any) {
-    return function () {
-      // 源码的发布订阅：
-      // const afterCallbackList: Function[] = []
-      // const onErrorCallbackList: Function[] = []
-      // function after(callback: Function) {
-      //   afterCallbackList.push(callback)
-      // }
-      // function onError(callback: Function) {
-      //   onErrorCallbackList.push(callback)
-      // }
-      // triggerSubscriptions(actionSubscriptions, {after, onError })
-      // let ret
-      // try{
-      //   ret = action.apply(store, Array.from(arguments))
-      //   triggerSubscriptions(afterCallbackList,ret)
-      // }catch(e){
-      //   triggerSubscriptions(onErrorCallbackList,e)
-      // }
-      // return ret
+    return async function () {
       eventEmitter.trigger("onAction", {
         after: eventEmitter.add.bind(eventEmitter, "after"),
         onError: eventEmitter.add.bind(eventEmitter, "onError")
       })
       let ret
       try {
-        ret = action.apply(store, Array.from(arguments))
+        ret = await action.apply(store, Array.from(arguments))
         eventEmitter.trigger("after", ret)
       } catch (e) {
         eventEmitter.trigger("onError", e)
+      } finally {
+        eventEmitter.off("after")
+        eventEmitter.off("onError")
       }
       return ret
     }
