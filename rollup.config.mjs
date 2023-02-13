@@ -11,15 +11,25 @@ export default [{
   input: "./src/index.ts",
   output: {
     format: "esm",
-    file: path.resolve(__dirname, "dist/bundle.js")
+    file: path.resolve(__dirname, "dist/bundle.mjs")
   },
   plugins: [
-    ts(),
-    terser()
+    ts(),	// 转化ts
+    terser() //压缩代码
+  ]
+},{
+  input: "./src/index.ts",
+  output: {
+    format: "cjs",
+    file: path.resolve(__dirname, "dist/bundle.cjs")
+  },
+  plugins: [
+    ts(),	// 转化ts
+    terser() //压缩代码
   ]
 }, {
   input: "./src/index.ts",
-  plugins: [dts()],
+  plugins: [dts()],// 生成d.ts文件
   output: {
     format: "esm",
     file: path.resolve(__dirname, "dist/bundle.d.ts")

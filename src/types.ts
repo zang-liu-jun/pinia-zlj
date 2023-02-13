@@ -13,7 +13,6 @@ export type Pinia = {
         store: Store<string, StateTree, _GettersTree<StateTree>, _ActionsTree>
       }) => any)
   ) => Pinia
-
 }
 
 export type StateTree = Record<string | number | symbol, any>
@@ -58,7 +57,6 @@ export type BaseStore<
   $state?: S
 }
 
-
 export type DefineStoreOptions<
   Id extends string,
   S extends StateTree,
@@ -75,3 +73,10 @@ export type DefineStoreOptions<
 
   actions?: A & ThisType<S>
 }
+
+export type SafeStore = Store<
+  string,
+  StateTree,
+  _GettersTree<StateTree>,
+  _ActionsTree
+>

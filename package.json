@@ -1,18 +1,19 @@
 {
   "name": "pinia-zlj",
-  "version": "1.0.0",
+  "version": "1.0.21",
   "description": "",
-  "main": "./dist/bundle.js",
-  "module": "./dist/bundle.js",
+  "main": "./dist/bundle.cjs",
+  "module": "./dist/bundle.mjs",
+  "types": "./dist/bundle.d.ts",
   "scripts": {
     "test": "npx vitest",
-    "build": "npx rollup -c"
+    "build": "npx rollup -c",
+    "tsBuild": "tsc&&npx tsup src/index.ts --format esm"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "pinia": "^2.0.30",
     "vue": "^3.2.47"
   },
   "devDependencies": {
@@ -25,6 +26,7 @@
     "rollup-plugin-minification": "^0.2.0",
     "rollup-plugin-serve": "^2.0.2",
     "rollup-plugin-typescript2": "^0.34.1",
+    "tsup": "^6.6.0",
     "typescript": "^4.9.5",
     "vite": "^4.1.1",
     "vitest": "^0.28.4"
