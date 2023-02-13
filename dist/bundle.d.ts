@@ -34,6 +34,7 @@ type DefineStoreOptions<Id extends string, S extends StateTree, G, A> = {
     getters?: G & ThisType<S> & _GettersTree<S>;
     actions?: A & ThisType<S>;
 };
+type SafeStore = Store<string, StateTree, _GettersTree<StateTree>, _ActionsTree>;
 
 declare let activePinia: Pinia;
 declare const setActivePinia: (pinia: Pinia) => Pinia;
@@ -55,4 +56,14 @@ declare class EventEmitter<T extends string> {
     trigger(type: T, ...args: any): void;
 }
 
-export { BaseStore, DefineStoreOptions, EventEmitter, Pinia, StateTree, Store, _ActionsTree, _GettersTree, activePinia, addSubscription, createOptionsStore, createPinia, createSetupStore, defineStore, piniaSymbol, setActivePinia, triggerSubscriptions };
+declare function persistentPlugin({ pinia, store }: {
+    pinia: Pinia;
+    store: SafeStore;
+}): void;
+
+declare function crossPagePlugin({ pinia, store }: {
+    pinia: Pinia;
+    store: SafeStore;
+}): void;
+
+export { BaseStore, DefineStoreOptions, EventEmitter, Pinia, SafeStore, StateTree, Store, _ActionsTree, _GettersTree, activePinia, addSubscription, createOptionsStore, createPinia, createSetupStore, crossPagePlugin, defineStore, persistentPlugin, piniaSymbol, setActivePinia, triggerSubscriptions };

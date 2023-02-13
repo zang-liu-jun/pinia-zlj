@@ -27,7 +27,8 @@ import type {
   Store,
   BaseStore,
   _ActionsTree,
-  _GettersTree
+  _GettersTree,
+  SafeStore
 } from "./types"
 
 function isComputed(o: any) {
